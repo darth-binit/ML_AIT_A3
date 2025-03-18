@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/binit/PycharmProjects/ML_AIT_A3/pythonProject/ProjectA3/mlruns/533977225019904044/352ca7b291c54108ba8a3ba34b8d6519/artifacts
+end_time: 1742217883204
+entry_point_name: ''
+experiment_id: '533977225019904044'
+lifecycle_stage: active
+run_id: 352ca7b291c54108ba8a3ba34b8d6519
+run_name: method-stochastic-lr-0.0001-weight-uniform-batch-128
+run_uuid: 352ca7b291c54108ba8a3ba34b8d6519
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742217881536
+status: 3
+tags: []
+user_id: binit

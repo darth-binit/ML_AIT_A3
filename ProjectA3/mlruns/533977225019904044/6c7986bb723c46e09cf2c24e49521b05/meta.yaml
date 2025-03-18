@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/binit/PycharmProjects/ML_AIT_A3/pythonProject/ProjectA3/mlruns/533977225019904044/6c7986bb723c46e09cf2c24e49521b05/artifacts
+end_time: 1742217376029
+entry_point_name: ''
+experiment_id: '533977225019904044'
+lifecycle_stage: active
+run_id: 6c7986bb723c46e09cf2c24e49521b05
+run_name: method-batch-lr-0.0001-weight-xavier-batch-128
+run_uuid: 6c7986bb723c46e09cf2c24e49521b05
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742217354108
+status: 3
+tags: []
+user_id: binit

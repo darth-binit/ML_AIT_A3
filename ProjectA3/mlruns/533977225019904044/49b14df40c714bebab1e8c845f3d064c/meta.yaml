@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/binit/PycharmProjects/ML_AIT_A3/pythonProject/ProjectA3/mlruns/533977225019904044/49b14df40c714bebab1e8c845f3d064c/artifacts
+end_time: 1742217848239
+entry_point_name: ''
+experiment_id: '533977225019904044'
+lifecycle_stage: active
+run_id: 49b14df40c714bebab1e8c845f3d064c
+run_name: method-stochastic-lr-0.001-weight-xavier-batch-128
+run_uuid: 49b14df40c714bebab1e8c845f3d064c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742217846566
+status: 3
+tags: []
+user_id: binit
