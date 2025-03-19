@@ -6,51 +6,56 @@ on:
       - main  # Runs this pipeline whenever code is pushed to main branch
 
 jobs:
-  build-and-push:
+#  build-and-push:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      - name: Log in to Docker Hub
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#
+#      - name: Build and Push Docker Image
+#        run: |
+#          docker build -t binit13/model-a3:latest .
+#          docker tag binit13/model-a3:latest binit13/model-a3:${{ github.run_number }}
+#          docker push binit13/model-a3:latest
+#          docker push binit13/model-a3:${{ github.run_number }}
+
+  deploy:
+    needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push Docker Image
+      - name: Setup SSH Key
         run: |
-          docker build -t binit13/model-a3:latest .
-          docker tag binit13/model-a3:latest binit13/model-a3:${{ github.run_number }}
-          docker push binit13/model-a3:latest
-          docker push binit13/model-a3:${{ github.run_number }}
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ML2023_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.BAZOOKA_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.ML2023_HOST }} >> ~/.ssh/known_hosts
 
-  deploy:
-    needs: build-and-push  # Run deployment only if the build-and-push job succeeds
-    runs-on: ubuntu-latest
+      - name: Debug SSH Connection
+        run: |
+          ssh -o ProxyJump=${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} \
+          ${{ secrets.ML2023_USER }}@${{ secrets.ML2023_HOST }} "echo Connected to ML2023!"
 
-    steps:
-    - name: Setup SSH Key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.ML2023_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.BAZOOKA_HOST }} >> ~/.ssh/known_hosts
-        ssh-keyscan -H ${{ secrets.ML2023_HOST }} >> ~/.ssh/known_hosts
-
-    - name: Debug SSH Connection
-      run: ssh -o ProxyJump=${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} ${{ secrets.ML2023_USER }}@${{ secrets.ML2023_HOST }} "echo Connected to ML2023!"
-
-    - name: SSH into ML2023 and Deploy
-      run: |
-        ssh -o ${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} \
+      - name: SSH into ML2023 and Deploy
+        run: |
+          ssh -o ProxyJump=${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} \
           ${{ secrets.ML2023_USER }}@${{ secrets.ML2023_HOST }} << 'EOF'
-          cd ~/st124783
-          docker-compose -f docker-compose-deploy.yaml down
-          docker pull binit13/model-a3:latest
-          docker-compose -f docker-compose-deploy.yaml up -d
-        EOF
+            cd ~/st124783
+            docker-compose -f docker-compose-deploy.yaml down
+            docker pull binit13/model-a3:latest
+            docker-compose -f docker-compose-deploy.yaml up -d
+          EOF
