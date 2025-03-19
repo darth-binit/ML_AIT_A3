@@ -29,14 +29,28 @@ jobs:
           docker push binit13/model-a3:latest
           docker push binit13/model-a3:${{ github.run_number }}
 
-#      - name: SSH into ml2023 and Deploy
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.ML2023_HOST }}
-#          username: ${{ secrets.ML2023_USER }}
-#          password: ${{ secrets.ML2023_PASSWORD }}
-#          script: |
-#            cd ~/deployment-folder
-#            docker-compose down
-#            docker pull binit13/model-a2:latest
-#            docker-compose up -d
+  deploy:
+    needs: build-and-push  # Run deployment only if the build-and-push job succeeds
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Setup SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.ML2023_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.BAZOOKA_HOST }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.ML2023_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Debug SSH Connection
+      run: ssh -o ProxyJump=${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} ${{ secrets.ML2023_USER }}@${{ secrets.ML2023_HOST }} "echo Connected to ML2023!"
+
+    - name: SSH into ML2023 and Deploy
+      run: |
+        ssh -o ${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} \
+          ${{ secrets.ML2023_USER }}@${{ secrets.ML2023_HOST }} << 'EOF'
+          cd ~/st124783
+          docker-compose -f docker-compose-deploy.yaml down
+          docker pull binit13/model-a3:latest
+          docker-compose -f docker-compose-deploy.yaml up -d
+        EOF
