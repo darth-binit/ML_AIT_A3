@@ -14,14 +14,14 @@ from Model.Model import MyLogisticRegression
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 brand_means_path = os.path.join(BASE_DIR, "brand_means.pkl")
-preprocess_path = os.path.join(BASE_DIR, "preprocessor.pkl")
+preprocess_path = os.path.join(BASE_DIR, "preprocess_test.pkl")
 model_path = os.path.join(BASE_DIR, "model.pkl")
 
 brand_means = joblib.load(brand_means_path)
 preprocessor = joblib.load(preprocess_path)
 model = joblib.load(model_path)
 
-data_file_path = os.path.join(BASE_DIR, "data/Out_287.csv")
+data_file_path = os.path.join(BASE_DIR, "Data/Out_287.csv")
 df = pd.read_csv(data_file_path)
 if 'Unnamed: 0' in df.columns:
     df.drop(columns=['Unnamed: 0'], inplace=True)
