@@ -30,7 +30,7 @@ jobs:
 #          docker push binit13/model-a3:${{ github.run_number }}
 
   deploy:
-    needs: build-and-push
+    #needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
