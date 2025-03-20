@@ -30,38 +30,15 @@ jobs:
 #          docker push binit13/model-a3:${{ github.run_number }}
 
   deploy:
-    #needs: build-and-push
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.ML2023_PRIVATE_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.BAZOOKA_HOST }} >> ~/.ssh/known_hosts
-          ssh-keyscan -H ${{ secrets.ML2023_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Debug SSH Key
-        run: |
-          ls -la ~/.ssh
-          cat ~/.ssh/id_rsa
-          ssh-add -l
-
-      - name: Debug SSH Connection
-        run: |
-          ssh -o ProxyJump=${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} \
-          ${{ secrets.ML2023_USER }}@${{ secrets.ML2023_HOST }} "echo Connected to ML2023!"
-
       - name: SSH into ML2023 and Deploy
         run: |
-          ssh -o ProxyJump=${{ secrets.ML2023_USER }}@${{ secrets.BAZOOKA_HOST }} \
-          ${{ secrets.ML2023_USER }}@${{ secrets.ML2023_HOST }} << 'EOF'
+          ssh ml2023 << 'EOF'
             cd ~/st124783
             docker-compose -f docker-compose-deploy.yaml down
             docker pull binit13/model-a3:latest
