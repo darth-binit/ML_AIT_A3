@@ -42,5 +42,5 @@ jobs:
             cd ~/st124783
             docker-compose -f docker-compose-deploy.yaml down
             docker pull binit13/model-a3:latest
-            docker-compose -f docker-compose-deploy.yaml up -d
+            docker compose -f docker-compose-deploy.yaml up -d
           EOF
