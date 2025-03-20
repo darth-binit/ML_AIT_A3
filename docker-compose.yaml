@@ -6,7 +6,7 @@ services:
     platform: linux/amd64
     build:
       context: .
-      dockerfile: .dockerfile
+      dockerfile: Dockerfile
     environment:
       - HOST=0.0.0.0
       - PORT=8501
