@@ -13,6 +13,8 @@ from Model.Model import MyLogisticRegression
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+#./svc.sh stop
+
 brand_means_path = os.path.join(BASE_DIR, "brand_means.pkl")
 preprocess_path = os.path.join(BASE_DIR, "preprocess_test.pkl")
 model_path = os.path.join(BASE_DIR, "model.pkl")

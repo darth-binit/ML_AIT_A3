@@ -30,6 +30,7 @@ jobs:
           docker push binit13/model-a3:${{ github.run_number }}
 
   deploy:
+    needs: build-and-push  # Ensures deploy runs only after image is built and pushed
     runs-on: self-hosted
 
     steps:
