@@ -38,8 +38,6 @@ jobs:
           echo "Current Working Directory: $(pwd)"
           echo "Repository Contents:"
           ls -R
-          python -c "import sys; print(sys.path)"
-          python -c "import ProjectA3.Utils.utils"
 
       - name: Set PYTHONPATH
         run: |

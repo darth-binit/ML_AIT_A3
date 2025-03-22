@@ -52,19 +52,15 @@ def load_latest_model(stage="Staging"):
         # Check if model already exists in cache
         if os.path.exists(local_model_path):
             print(f"Loading model from cache: {local_model_path}")
-            return load(local_model_path)  # Load from cache
+            return load(local_model_path)
+        else:
+            model_uri = f"models:/{model_name}/{latest_version}"
+            model = mlflow.pyfunc.load_model(model_uri=model_uri)
+            save(local_model_path, model)
+            print(f"Model saved locally at {local_model_path}")
 
-        # Load Model from MLflow
-        model_uri = f"models:/{model_name}/{latest_version}"
-        model = mlflow.pyfunc.load_model(model_uri=model_uri)
+            return model
 
-        # Save the model locally
-        save(local_model_path, model)
-        print(f"Model saved locally at {local_model_path}")
-
-        print("Model successfully loaded!")
-
-        return model
     except Exception as e:
         print(f" Error loading model: {e}")
         return None
