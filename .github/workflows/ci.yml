@@ -78,7 +78,7 @@ jobs:
           python ProjectA3/transition.py
 
   deploy:
-    needs: transition-to-production  # ✅ Deploys only if transition was successful
+    needs: transition-to-production  # Deploys only if transition was successful
     runs-on: self-hosted
 
     steps:
