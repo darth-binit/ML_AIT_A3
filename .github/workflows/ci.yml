@@ -18,10 +18,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest
+#      - name: Install dependencies
+#        run: |
+#          pip install -r requirements.txt
+#          pip install pytest
 
       - name: Set up MLflow Authentication
         run: |
@@ -31,6 +31,7 @@ jobs:
 
       - name: Run Model Tests
         run: |
+          echo "PYTHONPATH=$PWD" >> $GITHUB_ENV  # Set path for imports
           pytest ProjectA3/test_model.py  # Adjust path if needed
 
       # 🚀 COMMENTED OUT DOCKER BUILD & PUSH TEMPORARILY
@@ -73,9 +74,11 @@ jobs:
           echo "MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}" >> $GITHUB_ENV
           echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}" >> $GITHUB_ENV
 
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV  # Ensures Python finds ProjectA3
+
       - name: Transition Best Model to Production
-        run: |
-          python ProjectA3/transition.py
+        run: python ProjectA3/transition.py
 
   deploy:
     needs: transition-to-production  # Deploys only if transition was successful
