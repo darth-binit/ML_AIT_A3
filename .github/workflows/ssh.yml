@@ -60,13 +60,21 @@ jobs:
         # Only scan bazooka since ml2023 skips host key checking
         ssh-keyscan -p 22 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan bazooka host key"
         chmod 600 ~/.ssh/known_hosts
+        echo "ssh i am in"
 
     - name: SSH and Deploy to Server
       run: |
-        ssh -v st124783@ml2023 << 'EOF'
-        cd st124783/ || { echo "Error: Directory st125098/ not found"; exit 1; }
+        ssh -v st124783@ml2023 <<EOF
+        if [ ! -d "/home/st124783" ]; then
+        echo " ERROR: Directory /home/st124783 does not exist on the server!"
+        exit 1
+        fi
+        cd /home/st124783 || { echo "ERROR: Unable to navigate to /home/st124783!"; exit 1; }
+    
+        # Uncomment these when you're ready to restart the services
         # docker compose down || { echo "Error: docker-compose down failed"; exit 1; }
         # docker compose pull || { echo "Error: docker-compose pull failed"; exit 1; }
         # docker compose up -d || { echo "Error: docker-compose up failed"; exit 1; }
-        echo "Deployment completed successfully"
+
+        echo "✅ Deployment completed successfully!"
         EOF
