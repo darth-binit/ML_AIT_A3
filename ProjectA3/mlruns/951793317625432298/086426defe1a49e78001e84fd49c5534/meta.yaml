@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/binit/PycharmProjects/ML_AIT_A3/pythonProject/ProjectA3/mlruns/951793317625432298/086426defe1a49e78001e84fd49c5534/artifacts
+end_time: 1742625178648
+entry_point_name: ''
+experiment_id: '951793317625432298'
+lifecycle_stage: active
+run_id: 086426defe1a49e78001e84fd49c5534
+run_name: salty-shrike-90
+run_uuid: 086426defe1a49e78001e84fd49c5534
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742625178644
+status: 4
+tags: []
+user_id: binit
