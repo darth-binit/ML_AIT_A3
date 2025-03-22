@@ -1,9 +1,0 @@
-﻿{
-  "agentId": 21,
-  "agentName": "binit",
-  "poolId": 1,
-  "poolName": "Default",
-  "serverUrl": "https://pipelinesghubeus6.actions.githubusercontent.com/A0sfKHF0Vohh0fp9oDQ25ZO2JVouMs5Pqg8hY492EOyJDqOSA2/",
-  "gitHubUrl": "https://github.com/darth-binit/ML_AIT_A3",
-  "workFolder": "ML_AIT_A3_runner"
-}
