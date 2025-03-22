@@ -27,7 +27,7 @@ model_name = os.getenv("APP_MODEL_NAME")
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 MODEL_CACHE_DIR = os.path.join(PROJECT_ROOT, "models")
-
+client = MlflowClient()
 def load_latest_model(stage="Staging"):
 
     client = MlflowClient()
