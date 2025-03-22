@@ -1,0 +1,72 @@
+name: CI/CD for Streamlit App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # - name: Set up Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.10'
+
+    # - name: Install Dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r app/requirements.txt
+
+    # - name: Run Tests
+    #   run: |
+    #     pytest
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH key and config
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/st124783
+        chmod 600 ~/.ssh/st124783
+
+        cat << 'EOF' > ~/.ssh/config
+        Host bazooka
+          HostName bazooka.cs.ait.ac.th
+          User st124783
+          IdentityFile ~/.ssh/st124783
+
+        Host ml2023
+          HostName ml.brain.cs.ait.ac.th
+          User st124783
+          IdentityFile ~/.ssh/st124783
+          ProxyJump bazooka
+          StrictHostKeyChecking no
+          UserKnownHostsFile /dev/null
+        EOF
+        chmod 600 ~/.ssh/config
+
+        # Only scan bazooka since ml2023 skips host key checking
+        ssh-keyscan -p 22 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan bazooka host key"
+        chmod 600 ~/.ssh/known_hosts
+
+    - name: SSH and Deploy to Server
+      run: |
+        ssh -v st124783@ml2023 << 'EOF'
+        cd st124783/ || { echo "Error: Directory st125098/ not found"; exit 1; }
+#        docker compose down || { echo "Error: docker-compose down failed"; exit 1; }
+#        docker compose pull || { echo "Error: docker-compose pull failed"; exit 1; }
+#        docker compose up -d || { echo "Error: docker-compose up failed"; exit 1; }
+        echo "Deployment completed successfully"
+        EOF

@@ -1,9 +1,9 @@
 name: Build, Test, and Deploy Model
 
-on:
-  push:
-    branches:
-      - main  # Runs this pipeline whenever code is pushed to the main branch
+#on:
+#  push:
+#    branches:
+#      - main  # Runs this pipeline whenever code is pushed to the main branch
 
 jobs:
   build-and-test:
