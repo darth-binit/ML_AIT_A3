@@ -24,15 +24,14 @@ jobs:
           pip install pytest
 
       - name: Set up MLflow Authentication
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
         run: |
-          echo "MLFLOW_TRACKING_URI=${{ secrets.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
-          echo "MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}" >> $GITHUB_ENV
-          echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}" >> $GITHUB_ENV
-          
-          # Debugging Step: Verify Variables
-          echo "MLFLOW_TRACKING_URI: $MLFLOW_TRACKING_URI"
-          echo "MLFLOW_TRACKING_USERNAME: $MLFLOW_TRACKING_USERNAME"
-          echo "MLFLOW_TRACKING_PASSWORD: $MLFLOW_TRACKING_PASSWORD"
+          echo "MLFLOW_TRACKING_URI is set."
+          echo "MLFLOW_TRACKING_USERNAME is set."
+          echo "MLFLOW_TRACKING_PASSWORD is set."
 
       - name: Debug Paths
         run: |
@@ -46,6 +45,15 @@ jobs:
         run: |
           echo "PYTHONPATH=$PWD:$PWD/ProjectA3" >> $GITHUB_ENV
           echo "PYTHONPATH set to: $PWD:$PWD/ProjectA3"
+
+      - name: Debug MLflow Model Versions
+        run: |
+          python -c "
+          from mlflow.tracking import MlflowClient;
+          client = MlflowClient();
+          versions = client.search_model_versions(\"name='st124783-a3-model'\");
+          for v in versions: print(f'Model: {v.name}, Version: {v.version}, Stage: {v.current_stage}')
+          "
 
       - name: Run Model Tests
         run: |
