@@ -65,8 +65,8 @@ jobs:
       run: |
         ssh -v st124783@ml2023 << 'EOF'
         cd st124783/ || { echo "Error: Directory st125098/ not found"; exit 1; }
-#        docker compose down || { echo "Error: docker-compose down failed"; exit 1; }
-#        docker compose pull || { echo "Error: docker-compose pull failed"; exit 1; }
-#        docker compose up -d || { echo "Error: docker-compose up failed"; exit 1; }
+        # docker compose down || { echo "Error: docker-compose down failed"; exit 1; }
+        # docker compose pull || { echo "Error: docker-compose pull failed"; exit 1; }
+        # docker compose up -d || { echo "Error: docker-compose up failed"; exit 1; }
         echo "Deployment completed successfully"
         EOF
