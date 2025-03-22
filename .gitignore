@@ -1,7 +1,7 @@
 .venv/
 .DS_Store
 .idea/
-.actions-runner/
+actions-runner/
 __pycache__/
 .ipynb_checkpoints/
 .env
