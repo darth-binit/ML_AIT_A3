@@ -18,10 +18,10 @@ jobs:
         with:
           python-version: "3.12"
 
-#      - name: Install dependencies
-#        run: |
-#          pip install -r requirements.txt
-#          pip install pytest
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
 
       - name: Set up MLflow Authentication
         run: |
