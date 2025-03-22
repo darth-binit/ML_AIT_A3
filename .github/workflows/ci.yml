@@ -1,9 +1,9 @@
 name: Build, Test, and Deploy Model
 
-#on:
-#  push:
-#    branches:
-#      - main  # Runs this pipeline whenever code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main  # Runs this pipeline whenever code is pushed to the main branch
 
 jobs:
   build-and-test:
@@ -52,7 +52,7 @@ jobs:
       #     docker push binit13/model-a3:${{ github.run_number }}
 
   transition-to-production:
-    needs: build-and-test  # ✅ KEEP THIS LINE
+    needs: build-and-test  # KEEP THIS LINE
     runs-on: ubuntu-latest
 
     steps:
@@ -82,17 +82,49 @@ jobs:
 
   deploy:
     needs: transition-to-production  # Deploys only if transition was successful
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: SSH into ML2023 and Deploy
+      - name: Set up SSH key and config
         run: |
-          ssh ml2023 << 'EOF'
-            cd ~/st124783
-            docker compose -f docker-compose-deploy.yaml down
-            docker pull binit13/model-a3:latest
-            docker compose -f docker-compose-deploy.yaml up -d
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/st124783
+          chmod 600 ~/.ssh/st124783
+      
+          cat << 'EOF' > ~/.ssh/config
+          Host bazooka
+            HostName bazooka.cs.ait.ac.th
+            User st124783
+            IdentityFile ~/.ssh/st124783
+      
+          Host ml2023
+            HostName ml.brain.cs.ait.ac.th
+            User st124783
+            IdentityFile ~/.ssh/st124783
+            ProxyJump bazooka
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
           EOF
+          chmod 600 ~/.ssh/config
+      
+          # Only scan bazooka since ml2023 skips host key checking
+          ssh-keyscan -p 22 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan bazooka host key"
+          chmod 600 ~/.ssh/known_hosts
+          echo "ssh i am in"
+
+          - name: SSH and Deploy to Server
+            run: |
+              ssh -v st124783@ml2023 <<EOF
+              if [ ! -d "/home/st124783" ]; then
+              echo " ERROR: Directory /home/st124783 does not exist on the server!"
+              exit 1
+              fi
+              cd /home/st124783 || { echo "ERROR: Unable to navigate to /home/st124783!"; exit 1; }
+              # cd ~/st124783
+              docker compose -f docker-compose-deploy.yaml down
+              docker pull binit13/model-a3:latest
+              docker compose -f docker-compose-deploy.yaml up -d
+              EOF
