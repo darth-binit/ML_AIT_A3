@@ -29,6 +29,12 @@ jobs:
           echo "MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}" >> $GITHUB_ENV
           echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}" >> $GITHUB_ENV
 
+      - name: Debug Paths
+        run: |
+          echo "Current Working Directory: $(pwd)"
+          echo "Repository Contents:"
+          ls -R
+
       - name: Run Model Tests
         run: |
           echo "PYTHONPATH=$PWD" >> $GITHUB_ENV  # Set path for imports

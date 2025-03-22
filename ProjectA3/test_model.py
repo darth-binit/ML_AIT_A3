@@ -4,11 +4,8 @@ import pandas as pd
 import cloudpickle  # <-- Replacing joblib with cloudpickle
 import os
 import sys
-from Utils.utils import load_latest_model
+from ProjectA3.Utils.utils import load_latest_model
 
-
-# Add the project directory to sys.path
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 # Define paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

@@ -25,12 +25,15 @@ os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
 # Define Model Name
 model_name = os.getenv("APP_MODEL_NAME")
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+MODEL_CACHE_DIR = os.path.join(PROJECT_ROOT, "models")
+
 def load_latest_model(stage="Staging"):
 
     client = MlflowClient()
 
     # Create cache directory if it doesn't exist
-    cache_path = f"/Users/binit/PycharmProjects/ML_AIT_A3/pythonProject/ProjectA3/models/{stage}"
+    cache_path = os.path.join(MODEL_CACHE_DIR, stage)
     os.makedirs(cache_path, exist_ok=True)
 
     try:
@@ -89,4 +92,4 @@ def register_model_to_production():
     except Exception as e:
         print(f"Error in transitioning model to Production: {e}")
 
-register_model_to_production()
+load_latest_model()
