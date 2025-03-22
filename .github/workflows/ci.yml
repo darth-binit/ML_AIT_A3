@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Model Tests
         run: |
-          pytest tests/test_model.py  # Adjust path if needed
+          pytest ProjectA3/test_model.py  # Adjust path if needed
 
       # 🚀 COMMENTED OUT DOCKER BUILD & PUSH TEMPORARILY
       # - name: Set up Docker Buildx
@@ -75,7 +75,7 @@ jobs:
 
       - name: Transition Best Model to Production
         run: |
-          python pythonProject/ProjectA3/Utils/transition.py
+          python ProjectA3/transition.py
 
   deploy:
     needs: transition-to-production  # ✅ Deploys only if transition was successful
