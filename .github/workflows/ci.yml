@@ -34,13 +34,20 @@ jobs:
           echo "Current Working Directory: $(pwd)"
           echo "Repository Contents:"
           ls -R
+          python -c "import sys; print(sys.path)"
+          python -c "import ProjectA3.Utils.utils"
+
+      - name: Set PYTHONPATH
+        run: |
+          echo "PYTHONPATH=$PWD:$PWD/ProjectA3" >> $GITHUB_ENV
+          echo "PYTHONPATH set to: $PWD:$PWD/ProjectA3"
 
       - name: Run Model Tests
         run: |
-          echo "PYTHONPATH=$PWD" >> $GITHUB_ENV  # Set path for imports
-          pytest ProjectA3/test_model.py  # Adjust path if needed
+          source $GITHUB_ENV  # Ensure environment variables are loaded
+          pytest ProjectA3/test_model.py
 
-      # 🚀 COMMENTED OUT DOCKER BUILD & PUSH TEMPORARILY
+      #  COMMENTED OUT DOCKER BUILD & PUSH TEMPORARILY
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v2
 
