@@ -44,7 +44,7 @@ def test_model_input():
     """Test if the model takes expected input format."""
     try:
         preprocess_input = preprocessor.transform(sample_input)
-        model.predict(preprocess_input)
+        model.predict(preprocess_input, is_test=True)
     except Exception as e:
         pytest.fail(f"Model failed to take expected input: {e}")
 
