@@ -44,17 +44,17 @@ jobs:
           echo "APP_MODEL_NAME=$APP_MODEL_NAME" >> $GITHUB_ENV
           echo "All environment variables are now exported."
 
-      - name: Debug Environment Variables
-        run: |
-          echo "MLFLOW_TRACKING_URI: $MLFLOW_TRACKING_URI"
-          echo "APP_MODEL_NAME: $APP_MODEL_NAME"
-        
-
-      - name: Debug Paths
-        run: |
-          echo "Current Working Directory: $(pwd)"
-          echo "Repository Contents:"
-          ls -R
+#      - name: Debug Environment Variables
+#        run: |
+#          echo "MLFLOW_TRACKING_URI: $MLFLOW_TRACKING_URI"
+#          echo "APP_MODEL_NAME: $APP_MODEL_NAME"
+#
+#
+#      - name: Debug Paths
+#        run: |
+#          echo "Current Working Directory: $(pwd)"
+#          echo "Repository Contents:"
+#          ls -R
 
       - name: Set PYTHONPATH
         run: |
@@ -75,22 +75,22 @@ jobs:
           source $GITHUB_ENV  # Ensure environment variables are loaded
           pytest ProjectA3/test_model.py
 
-      #  COMMENTED OUT DOCKER BUILD & PUSH TEMPORARILY
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v2
+        #COMMENTED OUT DOCKER BUILD & PUSH TEMPORARILY
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      # - name: Log in to Docker Hub
-      #   uses: docker/login-action@v2
-      #   with:
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+           username: ${{ secrets.DOCKER_USERNAME }}
+           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Build and Push Docker Image
-      #   run: |
-      #     docker build -t binit13/model-a3:latest .
-      #     docker tag binit13/model-a3:latest binit13/model-a3:${{ github.run_number }}
-      #     docker push binit13/model-a3:latest
-      #     docker push binit13/model-a3:${{ github.run_number }}
+      - name: Build and Push Docker Image
+        run: |
+           docker build -t binit13/model-a3:latest .
+           docker tag binit13/model-a3:latest binit13/model-a3:${{ github.run_number }}
+           docker push binit13/model-a3:latest
+           docker push binit13/model-a3:${{ github.run_number }}
 
   deploy:
     needs: build-and-test  # Deploys only if tests were successful
