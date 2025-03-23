@@ -93,7 +93,7 @@ jobs:
       #     docker push binit13/model-a3:${{ github.run_number }}
 
   deploy:
-    needs: transition-to-production  # Deploys only if transition was successful
+    needs: build-and-test  # Deploys only if tests were successful
     runs-on: ubuntu-latest
 
     steps:
@@ -140,3 +140,4 @@ jobs:
           docker pull binit13/model-a3:latest
           docker compose -f docker-compose-deploy.yaml up -d
           EOF
+          
