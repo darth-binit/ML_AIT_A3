@@ -30,10 +30,17 @@ jobs:
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
           APP_MODEL_NAME: ${{ secrets.APP_MODEL_NAME }}
         run: |
-          echo "MLFLOW_TRACKING_URI is set."
-          echo "MLFLOW_TRACKING_USERNAME is set."
-          echo "MLFLOW_TRACKING_PASSWORD is set."
-          echo "APP_MODEL_NAME is set."
+          echo "MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_USERNAME=$MLFLOW_TRACKING_USERNAME" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_PASSWORD=$MLFLOW_TRACKING_PASSWORD" >> $GITHUB_ENV
+          echo "APP_MODEL_NAME=$APP_MODEL_NAME" >> $GITHUB_ENV
+          echo "All environment variables are now exported."
+
+      - name: Debug Environment Variables
+        run: |
+          echo "MLFLOW_TRACKING_URI: $MLFLOW_TRACKING_URI"
+          echo "APP_MODEL_NAME: $APP_MODEL_NAME"
+        
 
       - name: Debug Paths
         run: |

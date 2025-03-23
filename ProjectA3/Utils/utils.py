@@ -14,6 +14,10 @@ MLFLOW_TRACKING_USERNAME = os.getenv("MLFLOW_TRACKING_USERNAME")
 MLFLOW_TRACKING_PASSWORD = os.getenv("MLFLOW_TRACKING_PASSWORD")
 model_name = os.getenv("APP_MODEL_NAME")
 
+print(f"🔹 Debugging Environment Variables in utils.py")
+print(f"MLFLOW_TRACKING_URI: {MLFLOW_TRACKING_URI}")
+print(f"APP_MODEL_NAME: {model_name}")
+
 if not MLFLOW_TRACKING_URI or not model_name:
     raise ValueError("MLFLOW_TRACKING_URI or APP_MODEL_NAME is not set. Ensure they are defined in GitHub Secrets.")
 
