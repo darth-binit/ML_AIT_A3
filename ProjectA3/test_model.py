@@ -37,15 +37,14 @@ sample_input["brand_encoded"] = sample_input["brand_encoded"].fillna(np.mean(lis
 sample_input = sample_input.drop(columns=["brand"])  # Drop original brand column
 
 def test_load_model():
-    model = load_latest_model()
-    assert model
+    ml_model = load_latest_model()
+    assert ml_model
 
 def test_model_input():
     """Test if the model takes expected input format."""
-    model2 = load_latest_model()
     try:
         preprocess_input = preprocessor.transform(sample_input)
-        model2.predict(preprocess_input)
+        model.predict(preprocess_input)
     except Exception as e:
         pytest.fail(f"Model failed to take expected input: {e}")
 

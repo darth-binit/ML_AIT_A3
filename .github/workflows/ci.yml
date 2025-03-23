@@ -18,6 +18,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
@@ -97,6 +105,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
@@ -108,10 +124,17 @@ jobs:
           echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV  # Ensures Python finds ProjectA3
+        run: |
+          echo "PYTHONPATH=$PWD:$PWD/ProjectA3" >> $GITHUB_ENV
+          echo "PYTHONPATH set to: $PWD:$PWD/ProjectA3"
+
+      - name: Debug Transition Python Path
+        run: python -c "import sys; print(sys.path)"
 
       - name: Transition Best Model to Production
-        run: python ProjectA3/transition.py
+        run: |
+          source $GITHUB_ENV
+          python ProjectA3/transition.py
 
   deploy:
     needs: transition-to-production  # Deploys only if transition was successful
@@ -148,16 +171,16 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
           echo "ssh i am in"
 
-          - name: SSH and Deploy to Server
-            run: |
-              ssh -v st124783@ml2023 <<EOF
-              if [ ! -d "/home/st124783" ]; then
-              echo " ERROR: Directory /home/st124783 does not exist on the server!"
-              exit 1
-              fi
-              cd /home/st124783 || { echo "ERROR: Unable to navigate to /home/st124783!"; exit 1; }
-              # cd ~/st124783
-              docker compose -f docker-compose-deploy.yaml down
-              docker pull binit13/model-a3:latest
-              docker compose -f docker-compose-deploy.yaml up -d
-              EOF
+      - name: SSH and Deploy to Server
+        run: |
+          ssh -v st124783@ml2023 <<EOF
+          if [ ! -d "/home/st124783" ]; then
+          echo " ERROR: Directory /home/st124783 does not exist on the server!"
+          exit 1
+          fi
+          cd /home/st124783 || { echo "ERROR: Unable to navigate to /home/st124783!"; exit 1; }
+          # cd ~/st124783
+          docker compose -f docker-compose-deploy.yaml down
+          docker pull binit13/model-a3:latest
+          docker compose -f docker-compose-deploy.yaml up -d
+          EOF
