@@ -10,6 +10,8 @@
    - SSH to the ml2023 server using private key and proxy jump
    - Go to st124783 directory and then pull the image and make it run
    - Finally the website is up and running
+5. All the industry standards have been followed for the CI/CD pipeline, keeping variables secret, passing test cases, pushing to the docker and so on
+6. I thoroughly enjoyed building this project and learning is huge which i cannot define, so I would like to thank Prof. Chaklam and our T.A Thamakorn for guiding us through this project 
    
  
 
