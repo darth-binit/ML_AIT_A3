@@ -44,14 +44,12 @@ def load(filename:str) -> object:
 def load_latest_model(stage="Staging"):
     """Load the latest MLflow model from the specified stage"""
 
-    if not model_name:
-        raise ValueError("APP_MODEL_NAME is not set. Ensure it is defined in GitHub Secrets.")
-
+    # Ensure cache directory exists
     cache_path = os.path.join(MODEL_CACHE_DIR, stage)
-    os.makedirs(cache_path, exist_ok=True)  # Ensure directory exists
+    os.makedirs(cache_path, exist_ok=True)
 
     try:
-        # Fetch latest model version from MLflow
+        # Fetch latest model version in the given stage
         versions = client.get_latest_versions(name=model_name, stages=[stage])
         if not versions:
             print(f"No model found in '{stage}' stage.")
@@ -60,19 +58,26 @@ def load_latest_model(stage="Staging"):
         latest_version = versions[0].version
         print(f"Found model '{model_name}', Version: {latest_version}, Stage: {stage}")
 
-        # **GitHub CI/CD always fetches the model from MLflow**
+        # Define local path to save the model
+        local_model_path = os.path.join(cache_path, f"{model_name}.pkl")  # Ensure it's a valid file
+
+        # Check if model already exists in cache
+        if os.path.exists(local_model_path):
+            print(f"Loading model from cache: {local_model_path}")
+            return load(local_model_path)  # Load from cache
+
+        # Load Model from MLflow
         model_uri = f"models:/{model_name}/{latest_version}"
         model = mlflow.pyfunc.load_model(model_uri=model_uri)
 
-        # **Optional: Cache the model locally for debugging**
-        local_model_path = os.path.join(cache_path, f"{model_name}.pkl")
-        mlflow.pyfunc.save_model(model, local_model_path)
+        # Ensure the model is serialized properly before saving
+        save(local_model_path, model_uri)  # Save model path, not object
         print(f"Model saved locally at {local_model_path}")
 
-        return model
+        return mlflow.pyfunc.load_model(model_uri)  # Load from MLflow each time
 
     except Exception as e:
-        print(f"Error loading model: {e}")
+        print(f" Error loading model: {e}")
         return None
 
 def register_model_to_production():

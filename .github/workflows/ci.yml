@@ -36,6 +36,10 @@ jobs:
           echo "APP_MODEL_NAME=$APP_MODEL_NAME" >> $GITHUB_ENV
           echo "All environment variables are now exported."
 
+      - name: Debug MLflow Model
+        run: |
+            mlflow models list --name ${{ secrets.APP_MODEL_NAME }}
+
       - name: Debug Environment Variables
         run: |
           echo "MLFLOW_TRACKING_URI: $MLFLOW_TRACKING_URI"
