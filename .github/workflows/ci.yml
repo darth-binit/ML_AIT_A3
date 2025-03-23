@@ -28,10 +28,12 @@ jobs:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
           MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+          APP_MODEL_NAME: ${{ secrets.APP_MODEL_NAME }}
         run: |
           echo "MLFLOW_TRACKING_URI is set."
           echo "MLFLOW_TRACKING_USERNAME is set."
           echo "MLFLOW_TRACKING_PASSWORD is set."
+          echo "APP_MODEL_NAME is set."
 
       - name: Debug Paths
         run: |
