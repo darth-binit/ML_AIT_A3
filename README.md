@@ -14,4 +14,4 @@
 6. I thoroughly enjoyed building this project and learning is huge which i cannot define, so I would like to thank Prof. Chaklam and our T.A Thamakorn for guiding us through this project 
    
  
-
+![Alt Text](https://github.com/darth-binit/ML_AIT_A3/blob/main/ProjectA3/Screenshot%202568-03-23%20at%2017.21.54.png)
