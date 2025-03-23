@@ -2,9 +2,14 @@
 1. Kindly login to http://st124783.ml.brain.cs.ait.ac.th to view the web application and model in action.
 2. I have changed the target variable and classified into 4 categories of <span style="color:red">Budget/Economy/Premium/Luxury</span>. This classification was done based on price point.
 3. Streamlit framework has been used for front end web application and for visualization: Plotly and Seaborn mostly
-4. This project uses GitHub Actions with a ***self-hosted*** runner to automate Docker image builds and deployment to the ML2023 server. Upon pushing changes to the main branch, the pipeline:
-	- Builds and Pushes the Docker image to Docker Hub.
-	- Connects to ML2023 via SSH using a self-hosted runner.
-	- Pulls the latest image and restarts the container using docker compose.
+4. The CI/CD pipeline involve:
+   - Run the test which involves checking the model being registered to the mlflow
+   - Run the test which involves checking the model saved locally input and its param
+   - Run the test which involves checking the model output
+   - Login in to Docker and Build the docker image 
+   - SSH to the ml2023 server using private key and proxy jump
+   - Go to st124783 directory and then pull the image and make it run
+   - Finally the website is up and running
+   
  
-5. I initially faced issues setting up SSH authentication in the GitHub Actions environment due to incorrect handling of the private key and SSH configuration. Despite adding the private key as    a GitHub secret, the SSH connection failed, likely due to formatting errors or permission issues. To resolve this, we switched to using a self-hosted runner, allowing our local machine to       handle SSH authentication directly, ensuring a smoother and more secure deployment process.
+
