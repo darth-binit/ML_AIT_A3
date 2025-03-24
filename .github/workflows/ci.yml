@@ -87,7 +87,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-           docker build -t binit13/model-a3:latest .
+           docker build -t binit13/model-a3:latest . # should have used secret for model name too
            docker tag binit13/model-a3:latest binit13/model-a3:${{ github.run_number }}
            docker push binit13/model-a3:latest
            docker push binit13/model-a3:${{ github.run_number }}
@@ -122,8 +122,8 @@ jobs:
           EOF
           chmod 600 ~/.ssh/config
       
-          # Only scan bazooka since ml2023 skips host key checking
-          ssh-keyscan -p 22 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan bazooka host key"
+          # Scanning bazooka since ml2023 skips host key checking
+          ssh-keyscan -p 22 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Scanning Failed to bazooka host key"
           chmod 600 ~/.ssh/known_hosts
           echo "ssh i am in"
 
@@ -134,10 +134,10 @@ jobs:
           echo " ERROR: Directory /home/st124783 does not exist on the server!"
           exit 1
           fi
-          cd /home/st124783 || { echo "ERROR: Unable to navigate to /home/st124783!"; exit 1; }
+          cd /home/st124783 || { echo "ERROR:Navigation failure to /home/st124783!"; exit 1; }
           # cd ~/st124783
           docker compose -f docker-compose-deploy.yaml down
-          docker pull binit13/model-a3:latest
+          docker pull binit13/model-a3:latest ## Here i can hide the model's name and not use this way too
           docker compose -f docker-compose-deploy.yaml up -d
           EOF
           
