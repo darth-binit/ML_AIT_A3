@@ -88,9 +88,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
            docker build -t binit13/model-a3:latest . # should have used secret for model name too
-           docker tag binit13/model-a3:latest binit13/model-a3:${{ github.run_number }}
            docker push binit13/model-a3:latest
-           docker push binit13/model-a3:${{ github.run_number }}
 
   deploy:
     needs: build-and-test  # Deploys only if tests were successful
@@ -134,7 +132,7 @@ jobs:
           echo " ERROR: Directory /home/st124783 does not exist on the server!"
           exit 1
           fi
-          cd /home/st124783 || { echo "ERROR:Navigation failure to /home/st124783!"; exit 1; }
+          cd st124783/ || { echo "ERROR:Navigation failure to /home/st124783!"; exit 1; }
           # cd ~/st124783
           docker compose -f docker-compose-deploy.yaml down
           docker pull binit13/model-a3:latest ## Here i can hide the model's name and not use this way too
