@@ -185,7 +185,7 @@ if select == 'Predictive Analytics':
         temp_df = temp_df.replace(transmission_map)
 
         scaler = MinMaxScaler()
-        scaled = scaler.fit(temp_df)
+        scaled = scaler.fit(temp_df)  ##Print
 
         mod_usr_data = usr_data.replace(seller_map)
         mod_usr_data = mod_usr_data.replace(transmission_map)
